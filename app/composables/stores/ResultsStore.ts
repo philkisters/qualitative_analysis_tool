@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import type { PredictionConfig } from '~~/shared/Prediction'
 
 export type MetricValues = {
   min: number
@@ -69,15 +70,24 @@ export const useResultStore = defineStore('results', {
     loaded: false
   }),
   actions: {
-    async fetchResults() {
-      if (this.loaded || this.isLoading) {
+    async fetchResults(config: PredictionConfig, imageid: string) {
+      if (this.isLoading) {
         return
       }
 
       this.isLoading = true
+      this.loaded = false
 
       try {
-        const rawImageResults = await $fetch<RawImageResults>('/data/results.json')
+        const rawImageResults = await $fetch<RawImageResults>(`/api/results/${imageid}`, {
+          query: {
+            device: config.device,
+            kernel: config.kernel,
+            startStage: config.startStage,
+            branches: config.branches,
+            threshold: config.threshold
+          }
+        })
         const imageResults = Object.fromEntries(
           Object.entries(rawImageResults).map(([image, result]) => [
             image,

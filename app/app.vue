@@ -1,6 +1,22 @@
 <template>
   <UApp class="">
+    <ConfigLoading v-if="!configStore.isLoaded" />
+    <div v-else-if="selectedConfig === undefined">
+      <div class="flex flex-col justify-center items-center h-screen container mx-auto">
+        <div class="text-3xl font-bold mb-4">
+          No configuration selected.
+        </div>
+        <div v-if="configStore.configs.length === 0" class="text-lg text-muted">
+          No configs available. Please run some qualitative analysis first.
+        </div>
+        <div v-if="configStore.configs.length > 0" class="text-lg text-muted">
+          Please select a config:
+        </div>
+        <ConfigSelection v-if="configStore.configs.length > 0" @confirm="setActiveConfig" />
+      </div>
+    </div>
     <div
+      v-else
       class="flex flex-col p-4 h-screen w-screen gap-4"
       @contextmenu.prevent
     >
@@ -17,9 +33,9 @@
           />
         </HeaderContainer>
         <HeaderContainer>
-          <HeaderButton icon="i-lucide-move-left" />
-          <HeaderTitle title="Configuration" />
-          <HeaderButton icon="i-lucide-move-right" />
+          <div />
+          <UButton size="xl" color="secondary" label="Select Config" @click="selectedConfig = undefined" />
+          <UButton label="Copy active view" size="xl" variant="outline" trailing-icon="lucide-share" @click="copyActiveView" />
         </HeaderContainer>
       </div>
       <USeparator />
@@ -67,18 +83,18 @@
               Raw Image
             </div>
             <PreviewImage
-              :show="showImage(`/data/${image}/leftImg8bit.png`)"
-              :color="getColor(`/data/${image}/leftImg8bit.png`)"
-              :image-path="`/data/${image}/leftImg8bit.png`"
-              @click="setPrimaryImage(`/data/${image}/leftImg8bit.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/leftImg8bit.png`)"
+              :show="showImage(realImagePath(image))"
+              :color="getColor(realImagePath(image))"
+              :image-path="realImagePath(image)"
+              @click="setPrimaryImage(realImagePath(image))"
+              @contextmenu.prevent="setSecondaryImage(realImagePath(image))"
             />
             <PreviewImage
-              :show="showImage(`/data/${image}/gtFine_color.png`)"
-              :color="getColor(`/data/${image}/gtFine_color.png`)"
-              :image-path="`/data/${image}/gtFine_color.png`"
-              @click="setPrimaryImage(`/data/${image}/gtFine_color.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/gtFine_color.png`)"
+              :show="showImage(gtImagePath(image))"
+              :color="getColor(gtImagePath(image))"
+              :image-path="gtImagePath(image)"
+              @click="setPrimaryImage(gtImagePath(image))"
+              @contextmenu.prevent="setSecondaryImage(gtImagePath(image))"
             />
             <div class="flex-2 text-lg text-left">
               Ground Truth Labels
@@ -104,32 +120,32 @@
               Results
             </div>
             <PreviewImage
-              :show="showImage(`/data/${image}/exit1_prediction.png`)"
-              :color="getColor(`/data/${image}/exit1_prediction.png`)"
-              :image-path="`/data/${image}/exit1_prediction.png`"
-              @click="setPrimaryImage(`/data/${image}/exit1_prediction.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/exit1_prediction.png`)"
+              :show="showImage(exitImagePath(image, 1, 'prediction'))"
+              :color="getColor(exitImagePath(image, 1, 'prediction'))"
+              :image-path="exitImagePath(image, 1, 'prediction')"
+              @click="setPrimaryImage(exitImagePath(image, 1, 'prediction'))"
+              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 1, 'prediction'))"
             />
             <PreviewImage
-              :show="showImage(`/data/${image}/exit2_prediction.png`)"
-              :color="getColor(`/data/${image}/exit2_prediction.png`)"
-              :image-path="`/data/${image}/exit2_prediction.png`"
-              @click="setPrimaryImage(`/data/${image}/exit2_prediction.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/exit2_prediction.png`)"
+              :show="showImage(exitImagePath(image, 2, 'prediction'))"
+              :color="getColor(exitImagePath(image, 2, 'prediction'))"
+              :image-path="exitImagePath(image, 2, 'prediction')"
+              @click="setPrimaryImage(exitImagePath(image, 2, 'prediction'))"
+              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 2, 'prediction'))"
             />
             <PreviewImage
-              :show="showImage(`/data/${image}/exit3_prediction.png`)"
-              :color="getColor(`/data/${image}/exit3_prediction.png`)"
-              :image-path="`/data/${image}/exit3_prediction.png`"
-              @click="setPrimaryImage(`/data/${image}/exit3_prediction.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/exit3_prediction.png`)"
+              :show="showImage(exitImagePath(image, 3, 'prediction'))"
+              :color="getColor(exitImagePath(image, 3, 'prediction'))"
+              :image-path="exitImagePath(image, 3, 'prediction')"
+              @click="setPrimaryImage(exitImagePath(image, 3, 'prediction'))"
+              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 3, 'prediction'))"
             />
             <PreviewImage
-              :show="showImage(`/data/${image}/exit4_prediction.png`)"
-              :color="getColor(`/data/${image}/exit4_prediction.png`)"
-              :image-path="`/data/${image}/exit4_prediction.png`"
-              @click="setPrimaryImage(`/data/${image}/exit4_prediction.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/exit4_prediction.png`)"
+              :show="showImage(exitImagePath(image, 4, 'prediction'))"
+              :color="getColor(exitImagePath(image, 4, 'prediction'))"
+              :image-path="exitImagePath(image, 4, 'prediction')"
+              @click="setPrimaryImage(exitImagePath(image, 4, 'prediction'))"
+              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 4, 'prediction'))"
             />
           </div>
           <div class="flex gap-2 items-center">
@@ -139,27 +155,27 @@
             <div class="flex-1" />
             <PreviewImage
               border
-              :show="showImage(`/data/${image}/exit2_pixel_mask.png`)"
-              :color="getColor(`/data/${image}/exit2_pixel_mask.png`)"
-              :image-path="`/data/${image}/exit2_pixel_mask.png`"
-              @click="setPrimaryImage(`/data/${image}/exit2_pixel_mask.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/exit2_pixel_mask.png`)"
+              :show="showImage(exitImagePath(image, 2, 'pixel_mask'))"
+              :color="getColor(exitImagePath(image, 2, 'pixel_mask'))"
+              :image-path="exitImagePath(image, 2, 'pixel_mask')"
+              @click="setPrimaryImage(exitImagePath(image, 2, 'pixel_mask'))"
+              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 2, 'pixel_mask'))"
             />
             <PreviewImage
               border
-              :show="showImage(`/data/${image}/exit3_pixel_mask.png`)"
-              :color="getColor(`/data/${image}/exit3_pixel_mask.png`)"
-              :image-path="`/data/${image}/exit3_pixel_mask.png`"
-              @click="setPrimaryImage(`/data/${image}/exit3_pixel_mask.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/exit3_pixel_mask.png`)"
+              :show="showImage(exitImagePath(image, 3, 'pixel_mask'))"
+              :color="getColor(exitImagePath(image, 3, 'pixel_mask'))"
+              :image-path="exitImagePath(image, 3, 'pixel_mask')"
+              @click="setPrimaryImage(exitImagePath(image, 3, 'pixel_mask'))"
+              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 3, 'pixel_mask'))"
             />
             <PreviewImage
               border
-              :show="showImage(`/data/${image}/exit4_pixel_mask.png`)"
-              :color="getColor(`/data/${image}/exit4_pixel_mask.png`)"
-              :image-path="`/data/${image}/exit4_pixel_mask.png`"
-              @click="setPrimaryImage(`/data/${image}/exit4_pixel_mask.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/exit4_pixel_mask.png`)"
+              :show="showImage(exitImagePath(image, 4, 'pixel_mask'))"
+              :color="getColor(exitImagePath(image, 4, 'pixel_mask'))"
+              :image-path="exitImagePath(image, 4, 'pixel_mask')"
+              @click="setPrimaryImage(exitImagePath(image, 4, 'pixel_mask'))"
+              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 4, 'pixel_mask'))"
             />
             <div class="flex-1" />
           </div>
@@ -170,27 +186,27 @@
             <div class="flex-1" />
             <PreviewImage
               border
-              :show="showImage(`/data/${image}/exit2_block_mask.png`)"
-              :color="getColor(`/data/${image}/exit2_block_mask.png`)"
-              :image-path="`/data/${image}/exit2_block_mask.png`"
-              @click="setPrimaryImage(`/data/${image}/exit2_block_mask.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/exit2_block_mask.png`)"
+              :show="showImage(exitImagePath(image, 2, 'block_mask'))"
+              :color="getColor(exitImagePath(image, 2, 'block_mask'))"
+              :image-path="exitImagePath(image, 2, 'block_mask')"
+              @click="setPrimaryImage(exitImagePath(image, 2, 'block_mask'))"
+              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 2, 'block_mask'))"
             />
             <PreviewImage
-              :show="showImage(`/data/${image}/exit3_block_mask.png`)"
-              :color="getColor(`/data/${image}/exit3_block_mask.png`)"
-              :image-path="`/data/${image}/exit3_block_mask.png`"
+              :show="showImage(exitImagePath(image, 3, 'block_mask'))"
+              :color="getColor(exitImagePath(image, 3, 'block_mask'))"
+              :image-path="exitImagePath(image, 3, 'block_mask')"
               border
-              @click="setPrimaryImage(`/data/${image}/exit3_block_mask.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/exit3_block_mask.png`)"
+              @click="setPrimaryImage(exitImagePath(image, 3, 'block_mask'))"
+              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 3, 'block_mask'))"
             />
             <PreviewImage
-              :show="showImage(`/data/${image}/exit4_block_mask.png`)"
-              :color="getColor(`/data/${image}/exit4_block_mask.png`)"
-              :image-path="`/data/${image}/exit4_block_mask.png`"
+              :show="showImage(exitImagePath(image, 4, 'block_mask'))"
+              :color="getColor(exitImagePath(image, 4, 'block_mask'))"
+              :image-path="exitImagePath(image, 4, 'block_mask')"
               border
-              @click="setPrimaryImage(`/data/${image}/exit4_block_mask.png`)"
-              @contextmenu.prevent="setSecondaryImage(`/data/${image}/exit4_block_mask.png`)"
+              @click="setPrimaryImage(exitImagePath(image, 4, 'block_mask'))"
+              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 4, 'block_mask'))"
             />
             <div class="flex-1" />
           </div>
@@ -243,9 +259,16 @@
 
 <script setup lang="ts">
 import { useResultStore } from './composables/stores/ResultsStore'
+import { useConfigStore } from './composables/stores/ConfigStore'
 
 const resultStore = useResultStore()
-onMounted(() => resultStore.fetchResults())
+const configStore = useConfigStore()
+
+const router = useRouter()
+
+onMounted(() => {
+  configStore.loadConfigs()
+})
 
 const title = 'Qualitative Analysis Tool'
 const description
@@ -269,16 +292,58 @@ useSeoMeta({
 })
 
 const route = useRoute()
+const toast = useToast()
+
 const image = ref(typeof route.query.img === 'string' ? route.query.img : 'frankfurt_000000_000576')
-const primaryImage = ref(`/data/${image.value}/leftImg8bit.png`)
+const selectedConfig = ref<number | undefined>(route.query.config && typeof route.query.config === 'string' ? Number(route.query.config) : undefined)
 const secondaryImage = ref<string | undefined>(undefined)
 const alpha = ref([0.5])
+
+const config = computed(() => {
+  if (selectedConfig.value === undefined) return undefined
+  return configStore.configs[selectedConfig.value]
+})
+
+// query params required by the exit-specific image and results API endpoints
+const configQuery = computed(() => {
+  if (!config.value) return {}
+  return {
+    device: config.value.device,
+    kernel: config.value.kernel,
+    startStage: config.value.startStage,
+    branches: config.value.branches,
+    threshold: config.value.threshold
+  }
+})
+
+function realImagePath(imageId: string) {
+  return `/api/images/${imageId}/real`
+}
+function gtImagePath(imageId: string) {
+  return `/api/images/${imageId}/gt`
+}
+function exitImagePath(imageId: string, exit: 1 | 2 | 3 | 4, filename: 'prediction' | 'pixel_mask' | 'block_mask') {
+  const params = new URLSearchParams(configQuery.value as Record<string, string>)
+  return `/api/images/${imageId}/${exit}/${filename}?${params.toString()}`
+}
+
+const primaryImage = ref(realImagePath(image.value))
+
+watch(config, (newConfig) => {
+  if (newConfig) {
+    resultStore.fetchResults(newConfig, image.value)
+  }
+}, { immediate: true })
 
 const showImage = (imagePath: string) => {
   return primaryImage.value === imagePath || secondaryImage.value === imagePath
 }
 const getColor = (imagePath: string) => {
   return primaryImage.value === imagePath ? 'primary' : 'secondary'
+}
+
+const setActiveConfig = (configIndex: number) => {
+  selectedConfig.value = configIndex
 }
 
 const imageResults = (exit: 'exit1' | 'exit2' | 'exit3' | 'exit4') => {
@@ -320,7 +385,7 @@ function goToNextImage() {
   const nextImageId = resultStore.getNextImageId(image.value)
   if (nextImageId) {
     image.value = nextImageId
-    primaryImage.value = `/data/${nextImageId}/leftImg8bit.png`
+    primaryImage.value = realImagePath(nextImageId)
     secondaryImage.value = undefined
   }
 }
@@ -328,8 +393,38 @@ function goToPreviousImage() {
   const prevImageId = resultStore.getPreviousImageId(image.value)
   if (prevImageId) {
     image.value = prevImageId
-    primaryImage.value = `/data/${prevImageId}/leftImg8bit.png`
+    primaryImage.value = realImagePath(prevImageId)
     secondaryImage.value = undefined
   }
+}
+
+function copyActiveView() {
+  const currentPath = router.currentRoute.value.fullPath
+  const shareUrl = new URL(currentPath, window.location.origin).href + `?img=${image.value}&config=${selectedConfig.value}`
+
+  if (!navigator.clipboard) {
+    toast.add({
+      title:  `Failed to copy ${shareUrl}`,
+      description: 'Copying requires HTTPS or localhost.',
+      color: 'error'
+    })
+    router.replace(`?img=${image.value}&config=${selectedConfig.value}`)
+    return
+  }
+
+  navigator.clipboard.writeText(shareUrl).then(() => {
+    toast.add({
+      title: 'Copied to clipboard!',
+      description: shareUrl,
+      color: 'success'
+    })
+  }).catch((error) => {
+    console.error('Failed to copy:', error)
+    toast.add({
+      title: 'Copy failed',
+      description: 'The browser denied clipboard access. Check the site permissions and try again.',
+      color: 'error'
+    })
+  })
 }
 </script>

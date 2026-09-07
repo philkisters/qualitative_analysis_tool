@@ -8,11 +8,10 @@
       :color="color"
       :position="position"
     >
-      <NuxtImg
+      <img
         :src="imagePath"
         alt="Raw Image"
         class=""
-        :placeholder="dimensions"
       />
     </UChip>
   </div>
