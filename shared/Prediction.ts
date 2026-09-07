@@ -20,7 +20,7 @@ export function getRealImage(imageId: string): string {
   return `leftImg8bit/val/${city}/${imageId}_leftImg8bit.png`
 }
 
-export function getPredictionConfigFromQuery(query: Record<string, any>): PredictionConfig {
+export function getPredictionConfigFromQuery(query: Record<string, unknown>): PredictionConfig {
   if (!query.device || !query.kernel || !query.startStage || !query.branches || !query.threshold) {
     throw createError({
       statusCode: 400,

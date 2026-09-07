@@ -6,13 +6,22 @@
         <div class="text-3xl font-bold mb-4">
           No configuration selected.
         </div>
-        <div v-if="configStore.configs.length === 0" class="text-lg text-muted">
+        <div
+          v-if="configStore.configs.length === 0"
+          class="text-lg text-muted"
+        >
           No configs available. Please run some qualitative analysis first.
         </div>
-        <div v-if="configStore.configs.length > 0" class="text-lg text-muted">
+        <div
+          v-if="configStore.configs.length > 0"
+          class="text-lg text-muted"
+        >
           Please select a config:
         </div>
-        <ConfigSelection v-if="configStore.configs.length > 0" @confirm="setActiveConfig" />
+        <ConfigSelection
+          v-if="configStore.configs.length > 0"
+          @confirm="setActiveConfig"
+        />
       </div>
     </div>
     <div
@@ -34,8 +43,19 @@
         </HeaderContainer>
         <HeaderContainer>
           <div />
-          <UButton size="xl" color="secondary" label="Select Config" @click="selectedConfig = undefined" />
-          <UButton label="Copy active view" size="xl" variant="outline" trailing-icon="lucide-share" @click="copyActiveView" />
+          <UButton
+            size="xl"
+            color="secondary"
+            label="Select Config"
+            @click="selectedConfig = undefined"
+          />
+          <UButton
+            label="Copy active view"
+            size="xl"
+            variant="outline"
+            trailing-icon="lucide-share"
+            @click="copyActiveView"
+          />
         </HeaderContainer>
       </div>
       <USeparator />
@@ -404,7 +424,7 @@ function copyActiveView() {
 
   if (!navigator.clipboard) {
     toast.add({
-      title:  `Failed to copy ${shareUrl}`,
+      title: `Failed to copy ${shareUrl}`,
       description: 'Copying requires HTTPS or localhost.',
       color: 'error'
     })

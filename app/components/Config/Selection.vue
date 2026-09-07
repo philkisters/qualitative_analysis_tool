@@ -1,6 +1,5 @@
 <template>
   <div class="flex flex-col w-full">
-
     <div class="flex border-2 w-full">
       <div class="flex-1 flex flex-col border-r-2 bg-gray-200">
         <div class="text-lg font-bold p-2 border text-center">
@@ -21,97 +20,114 @@
       </div>
       <div class="flex-3 flex flex-col">
         <div class="flex w-full">
-          <ConfigSelectionItem 
-      :status="optionStatus('device', 'jetson')"
-      @click="selectOption('device', 'jetson')">
+          <ConfigSelectionItem
+            :status="optionStatus('device', 'jetson')"
+            @click="selectOption('device', 'jetson')"
+          >
             Jetson
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('device', 'gpu02')"
-      @click="selectOption('device', 'gpu02')">
+          <ConfigSelectionItem
+            :status="optionStatus('device', 'gpu02')"
+            @click="selectOption('device', 'gpu02')"
+          >
             GPU 02
           </ConfigSelectionItem>
         </div>
         <div class="flex w-full">
-          <ConfigSelectionItem 
-      :status="optionStatus('kernel', 'block')"
-      @click="selectOption('kernel', 'block')">
+          <ConfigSelectionItem
+            :status="optionStatus('kernel', 'block')"
+            @click="selectOption('kernel', 'block')"
+          >
             Block
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('kernel', 'custom')"
-      @click="selectOption('kernel', 'custom')">
+          <ConfigSelectionItem
+            :status="optionStatus('kernel', 'custom')"
+            @click="selectOption('kernel', 'custom')"
+          >
             Custom
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('kernel', 'torch')"
-      @click="selectOption('kernel', 'torch')">
+          <ConfigSelectionItem
+            :status="optionStatus('kernel', 'torch')"
+            @click="selectOption('kernel', 'torch')"
+          >
             Torch
           </ConfigSelectionItem>
         </div>
         <div class="flex w-full">
-          <ConfigSelectionItem 
-      :status="optionStatus('startStage', 1)"
-      @click="selectOption('startStage', 1)">
+          <ConfigSelectionItem
+            :status="optionStatus('startStage', 1)"
+            @click="selectOption('startStage', 1)"
+          >
             1
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('startStage', 2)"
-      @click="selectOption('startStage', 2)">
+          <ConfigSelectionItem
+            :status="optionStatus('startStage', 2)"
+            @click="selectOption('startStage', 2)"
+          >
             2
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('startStage', 3)"
-      @click="selectOption('startStage', 3)">
+          <ConfigSelectionItem
+            :status="optionStatus('startStage', 3)"
+            @click="selectOption('startStage', 3)"
+          >
             3
           </ConfigSelectionItem>
         </div>
         <div class="flex w-full">
-          <ConfigSelectionItem 
-      :status="optionStatus('branches', 0)"
-      @click="selectOption('branches', 0)">
+          <ConfigSelectionItem
+            :status="optionStatus('branches', 0)"
+            @click="selectOption('branches', 0)"
+          >
             [0]
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('branches', 1)"
-      @click="selectOption('branches', 1)">
+          <ConfigSelectionItem
+            :status="optionStatus('branches', 1)"
+            @click="selectOption('branches', 1)"
+          >
             [0, 1]
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('branches', 2)"
-      @click="selectOption('branches', 2)">
+          <ConfigSelectionItem
+            :status="optionStatus('branches', 2)"
+            @click="selectOption('branches', 2)"
+          >
             [0, 1, 2]
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('branches', 3)"
-      @click="selectOption('branches', 3)">
+          <ConfigSelectionItem
+            :status="optionStatus('branches', 3)"
+            @click="selectOption('branches', 3)"
+          >
             [0, 1, 2, 3]
           </ConfigSelectionItem>
         </div>
         <div class="flex w-full">
-          <ConfigSelectionItem 
-      :status="optionStatus('threshold', 1)"
-      @click="selectOption('threshold', 1)">
+          <ConfigSelectionItem
+            :status="optionStatus('threshold', 1)"
+            @click="selectOption('threshold', 1)"
+          >
             0.1
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('threshold', 2)"
-      @click="selectOption('threshold', 2)">
+          <ConfigSelectionItem
+            :status="optionStatus('threshold', 2)"
+            @click="selectOption('threshold', 2)"
+          >
             0.2
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('threshold', 3)"
-      @click="selectOption('threshold', 3)">
+          <ConfigSelectionItem
+            :status="optionStatus('threshold', 3)"
+            @click="selectOption('threshold', 3)"
+          >
             0.3
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('threshold', 4)"
-      @click="selectOption('threshold', 4)">
+          <ConfigSelectionItem
+            :status="optionStatus('threshold', 4)"
+            @click="selectOption('threshold', 4)"
+          >
             0.4
           </ConfigSelectionItem>
-          <ConfigSelectionItem 
-      :status="optionStatus('threshold', 5)"
-      @click="selectOption('threshold', 5)">
+          <ConfigSelectionItem
+            :status="optionStatus('threshold', 5)"
+            @click="selectOption('threshold', 5)"
+          >
             0.5
           </ConfigSelectionItem>
         </div>
@@ -130,10 +146,10 @@
 </template>
 
 <script lang="ts" setup>
-import { useConfigStore } from '~/composables/stores/ConfigStore';
+import { useConfigStore } from '~/composables/stores/ConfigStore'
 import type { PredictionConfig } from '~~/shared/Prediction'
 
-const configStore = useConfigStore();
+const configStore = useConfigStore()
 
 const emit = defineEmits<{
   (e: 'confirm', configIndex: number): void
@@ -184,7 +200,7 @@ function selectOption(level: keyof PredictionConfig, value: unknown) {
   levelOrder.forEach((l, i) => {
     if (i < idx) return
     if (i === idx && !isDeselect) (selection as Record<string, unknown>)[l] = value
-    else delete selection[l]
+    else selection[l] = undefined
   })
 }
 
@@ -194,5 +210,4 @@ function confirmSelection() {
   if (configIndex === -1) return
   emit('confirm', configIndex)
 }
-
 </script>
