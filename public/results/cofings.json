@@ -1,0 +1,9 @@
+[
+  {
+    "device": "jetson",
+    "kernel": "block",
+    "startStage": 1,
+    "branches": 1,
+    "threshold": 3
+  }
+]
