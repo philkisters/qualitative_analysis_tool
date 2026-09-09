@@ -82,7 +82,7 @@
             </div>
             <div />
             <div
-              v-if="secondaryImage"
+              v-if="secondaryImagePath"
               class="flex gap-1 items-center"
             >
               <div class="text-sm">
@@ -93,8 +93,8 @@
           </div>
           <ImageCompare
             v-model:alpha="alpha"
-            :base-image="primaryImage"
-            :overlay-image="secondaryImage"
+            :base-image="primaryImagePath"
+            :overlay-image="secondaryImagePath"
           />
         </div>
         <div class="flex-2 flex flex-col gap-2">
@@ -103,18 +103,18 @@
               Raw Image
             </div>
             <PreviewImage
-              :show="showImage(realImagePath(image))"
-              :color="getColor(realImagePath(image))"
-              :image-path="realImagePath(image)"
-              @click="setPrimaryImage(realImagePath(image))"
-              @contextmenu.prevent="setSecondaryImage(realImagePath(image))"
+              :show="showImage(getImagePath({ type: ImageType.Real, exit: 1 }))"
+              :color="getColor(getImagePath({ type: ImageType.Real, exit: 1 }))"
+              :image-path="getImagePath({ type: ImageType.Real, exit: 1 })"
+              @click="setPrimaryImage({ type: ImageType.Real, exit: 1 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.Real, exit: 1 })"
             />
             <PreviewImage
-              :show="showImage(gtImagePath(image))"
-              :color="getColor(gtImagePath(image))"
-              :image-path="gtImagePath(image)"
-              @click="setPrimaryImage(gtImagePath(image))"
-              @contextmenu.prevent="setSecondaryImage(gtImagePath(image))"
+              :show="showImage(getImagePath({ type: ImageType.GT, exit: 1 }))"
+              :color="getColor(getImagePath({ type: ImageType.GT, exit: 1 }))"
+              :image-path="getImagePath({ type: ImageType.GT, exit: 1 })"
+              @click="setPrimaryImage({ type: ImageType.GT, exit: 1 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.GT, exit: 1 })"
             />
             <div class="flex-2 text-lg text-left">
               Ground Truth Labels
@@ -140,32 +140,32 @@
               Results
             </div>
             <PreviewImage
-              :show="showImage(exitImagePath(image, 1, 'prediction'))"
-              :color="getColor(exitImagePath(image, 1, 'prediction'))"
-              :image-path="exitImagePath(image, 1, 'prediction')"
-              @click="setPrimaryImage(exitImagePath(image, 1, 'prediction'))"
-              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 1, 'prediction'))"
+              :show="showImage(getImagePath({ type: ImageType.Prediction, exit: 1 }))"
+              :color="getColor(getImagePath({ type: ImageType.Prediction, exit: 1 }))"
+              :image-path="getImagePath({ type: ImageType.Prediction, exit: 1 })"
+              @click="setPrimaryImage({ type: ImageType.Prediction, exit: 1 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.Prediction, exit: 1 })"
             />
             <PreviewImage
-              :show="showImage(exitImagePath(image, 2, 'prediction'))"
-              :color="getColor(exitImagePath(image, 2, 'prediction'))"
-              :image-path="exitImagePath(image, 2, 'prediction')"
-              @click="setPrimaryImage(exitImagePath(image, 2, 'prediction'))"
-              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 2, 'prediction'))"
+              :show="showImage(getImagePath({ type: ImageType.Prediction, exit: 2 }))"
+              :color="getColor(getImagePath({ type: ImageType.Prediction, exit: 2 }))"
+              :image-path="getImagePath({ type: ImageType.Prediction, exit: 2 })"
+              @click="setPrimaryImage({ type: ImageType.Prediction, exit: 2 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.Prediction, exit: 2 })"
             />
             <PreviewImage
-              :show="showImage(exitImagePath(image, 3, 'prediction'))"
-              :color="getColor(exitImagePath(image, 3, 'prediction'))"
-              :image-path="exitImagePath(image, 3, 'prediction')"
-              @click="setPrimaryImage(exitImagePath(image, 3, 'prediction'))"
-              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 3, 'prediction'))"
+              :show="showImage(getImagePath({ type: ImageType.Prediction, exit: 3 }))"
+              :color="getColor(getImagePath({ type: ImageType.Prediction, exit: 3 }))"
+              :image-path="getImagePath({ type: ImageType.Prediction, exit: 3 })"
+              @click="setPrimaryImage({ type: ImageType.Prediction, exit: 3 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.Prediction, exit: 3 })"
             />
             <PreviewImage
-              :show="showImage(exitImagePath(image, 4, 'prediction'))"
-              :color="getColor(exitImagePath(image, 4, 'prediction'))"
-              :image-path="exitImagePath(image, 4, 'prediction')"
-              @click="setPrimaryImage(exitImagePath(image, 4, 'prediction'))"
-              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 4, 'prediction'))"
+              :show="showImage(getImagePath({ type: ImageType.Prediction, exit: 4 }))"
+              :color="getColor(getImagePath({ type: ImageType.Prediction, exit: 4 }))"
+              :image-path="getImagePath({ type: ImageType.Prediction, exit: 4 })"
+              @click="setPrimaryImage({ type: ImageType.Prediction, exit: 4 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.Prediction, exit: 4 })"
             />
           </div>
           <div class="flex gap-2 items-center">
@@ -175,27 +175,27 @@
             <div class="flex-1" />
             <PreviewImage
               border
-              :show="showImage(exitImagePath(image, 2, 'pixel_mask'))"
-              :color="getColor(exitImagePath(image, 2, 'pixel_mask'))"
-              :image-path="exitImagePath(image, 2, 'pixel_mask')"
-              @click="setPrimaryImage(exitImagePath(image, 2, 'pixel_mask'))"
-              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 2, 'pixel_mask'))"
+              :show="showImage(getImagePath({ type: ImageType.PixelMask, exit: 2 }))"
+              :color="getColor(getImagePath({ type: ImageType.PixelMask, exit: 2 }))"
+              :image-path="getImagePath({ type: ImageType.PixelMask, exit: 2 })"
+              @click="setPrimaryImage({ type: ImageType.PixelMask, exit: 2 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.PixelMask, exit: 2 })"
             />
             <PreviewImage
               border
-              :show="showImage(exitImagePath(image, 3, 'pixel_mask'))"
-              :color="getColor(exitImagePath(image, 3, 'pixel_mask'))"
-              :image-path="exitImagePath(image, 3, 'pixel_mask')"
-              @click="setPrimaryImage(exitImagePath(image, 3, 'pixel_mask'))"
-              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 3, 'pixel_mask'))"
+              :show="showImage(getImagePath({ type: ImageType.PixelMask, exit: 3 }))"
+              :color="getColor(getImagePath({ type: ImageType.PixelMask, exit: 3 }))"
+              :image-path="getImagePath({ type: ImageType.PixelMask, exit: 3 })"
+              @click="setPrimaryImage({ type: ImageType.PixelMask, exit: 3 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.PixelMask, exit: 3 })"
             />
             <PreviewImage
               border
-              :show="showImage(exitImagePath(image, 4, 'pixel_mask'))"
-              :color="getColor(exitImagePath(image, 4, 'pixel_mask'))"
-              :image-path="exitImagePath(image, 4, 'pixel_mask')"
-              @click="setPrimaryImage(exitImagePath(image, 4, 'pixel_mask'))"
-              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 4, 'pixel_mask'))"
+              :show="showImage(getImagePath({ type: ImageType.PixelMask, exit: 4 }))"
+              :color="getColor(getImagePath({ type: ImageType.PixelMask, exit: 4 }))"
+              :image-path="getImagePath({ type: ImageType.PixelMask, exit: 4 })"
+              @click="setPrimaryImage({ type: ImageType.PixelMask, exit: 4 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.PixelMask, exit: 4 })"
             />
             <div class="flex-1" />
           </div>
@@ -206,27 +206,27 @@
             <div class="flex-1" />
             <PreviewImage
               border
-              :show="showImage(exitImagePath(image, 2, 'block_mask'))"
-              :color="getColor(exitImagePath(image, 2, 'block_mask'))"
-              :image-path="exitImagePath(image, 2, 'block_mask')"
-              @click="setPrimaryImage(exitImagePath(image, 2, 'block_mask'))"
-              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 2, 'block_mask'))"
+              :show="showImage(getImagePath({ type: ImageType.BlockMask, exit: 2 }))"
+              :color="getColor(getImagePath({ type: ImageType.BlockMask, exit: 2 }))"
+              :image-path="getImagePath({ type: ImageType.BlockMask, exit: 2 })"
+              @click="setPrimaryImage({ type: ImageType.BlockMask, exit: 2 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.BlockMask, exit: 2 })"
             />
             <PreviewImage
-              :show="showImage(exitImagePath(image, 3, 'block_mask'))"
-              :color="getColor(exitImagePath(image, 3, 'block_mask'))"
-              :image-path="exitImagePath(image, 3, 'block_mask')"
+              :show="showImage(getImagePath({ type: ImageType.BlockMask, exit: 3 }))"
+              :color="getColor(getImagePath({ type: ImageType.BlockMask, exit: 3 }))"
+              :image-path="getImagePath({ type: ImageType.BlockMask, exit: 3 })"
               border
-              @click="setPrimaryImage(exitImagePath(image, 3, 'block_mask'))"
-              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 3, 'block_mask'))"
+              @click="setPrimaryImage({ type: ImageType.BlockMask, exit: 3 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.BlockMask, exit: 3 })"
             />
             <PreviewImage
-              :show="showImage(exitImagePath(image, 4, 'block_mask'))"
-              :color="getColor(exitImagePath(image, 4, 'block_mask'))"
-              :image-path="exitImagePath(image, 4, 'block_mask')"
+              :show="showImage(getImagePath({ type: ImageType.BlockMask, exit: 4 }))"
+              :color="getColor(getImagePath({ type: ImageType.BlockMask, exit: 4 }))"
+              :image-path="getImagePath({ type: ImageType.BlockMask, exit: 4 })"
               border
-              @click="setPrimaryImage(exitImagePath(image, 4, 'block_mask'))"
-              @contextmenu.prevent="setSecondaryImage(exitImagePath(image, 4, 'block_mask'))"
+              @click="setPrimaryImage({ type: ImageType.BlockMask, exit: 4 })"
+              @contextmenu.prevent="setSecondaryImage({ type: ImageType.BlockMask, exit: 4 })"
             />
             <div class="flex-1" />
           </div>
@@ -311,12 +311,30 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
+enum ImageType {
+  Real = 'real',
+  GT = 'gt',
+  Prediction = 'prediction',
+  PixelMask = 'pixel_mask',
+  BlockMask = 'block_mask'
+}
+
+type ImageIdentifier = {
+  type: ImageType
+  exit: 1 | 2 | 3 | 4
+}
+
 const route = useRoute()
 const toast = useToast()
 
 const image = ref(typeof route.query.img === 'string' ? route.query.img : 'frankfurt_000000_000576')
 const selectedConfig = ref<number | undefined>(route.query.config && typeof route.query.config === 'string' ? Number(route.query.config) : undefined)
-const secondaryImage = ref<string | undefined>(undefined)
+
+const primaryImage = ref<ImageIdentifier>({ type: ImageType.Real, exit: 1 })
+const secondaryImage = ref<ImageIdentifier | undefined>(undefined)
+
+const primaryImagePath = computed(() => getImagePath(primaryImage.value))
+const secondaryImagePath = computed(() => secondaryImage.value ? getImagePath(secondaryImage.value) : undefined)
 const alpha = ref([0.5])
 
 const config = computed(() => {
@@ -336,18 +354,27 @@ const configQuery = computed(() => {
   }
 })
 
-function realImagePath(imageId: string) {
-  return `/api/images/${imageId}/real`
-}
-function gtImagePath(imageId: string) {
-  return `/api/images/${imageId}/gt`
-}
-function exitImagePath(imageId: string, exit: 1 | 2 | 3 | 4, filename: 'prediction' | 'pixel_mask' | 'block_mask') {
-  const params = new URLSearchParams(configQuery.value as Record<string, string>)
-  return `/api/images/${imageId}/${exit}/${filename}?${params.toString()}`
+function getImagePath(imageIdentifier: ImageIdentifier) {
+  if (imageIdentifier.type === ImageType.Real) {
+    return realImagePath()
+  } else if (imageIdentifier.type === ImageType.GT) {
+    return gtImagePath()
+  } else {
+    return exitImagePathFromIdentifier(imageIdentifier)
+  }
 }
 
-const primaryImage = ref(realImagePath(image.value))
+function realImagePath() {
+  return `/api/images/${image.value}/real`
+}
+function gtImagePath() {
+  return `/api/images/${image.value}/gt`
+}
+
+function exitImagePathFromIdentifier(imageIdentifier: ImageIdentifier) {
+  const params = new URLSearchParams(configQuery.value as Record<string, string>)
+  return `/api/images/${image.value}/${imageIdentifier.exit}/${imageIdentifier.type as 'prediction' | 'pixel_mask' | 'block_mask'}?${params.toString()}`
+}
 
 watch(config, (newConfig) => {
   if (newConfig) {
@@ -356,10 +383,10 @@ watch(config, (newConfig) => {
 }, { immediate: true })
 
 const showImage = (imagePath: string) => {
-  return primaryImage.value === imagePath || secondaryImage.value === imagePath
+  return primaryImagePath.value === imagePath || secondaryImagePath.value === imagePath
 }
 const getColor = (imagePath: string) => {
-  return primaryImage.value === imagePath ? 'primary' : 'secondary'
+  return primaryImagePath.value === imagePath ? 'primary' : 'secondary'
 }
 
 const setActiveConfig = (configIndex: number) => {
@@ -379,21 +406,21 @@ const imageResults = (exit: 'exit1' | 'exit2' | 'exit3' | 'exit4') => {
   return resultStore.imageResults[image.value]![exit]
 }
 
-function setPrimaryImage(imagePath: string) {
-  primaryImage.value = imagePath
-  if (primaryImage.value === secondaryImage.value) {
+function setPrimaryImage(imageIdentifier: ImageIdentifier) {
+  primaryImage.value = imageIdentifier
+  if (primaryImagePath.value === secondaryImagePath.value) {
     secondaryImage.value = undefined
   }
 }
-function setSecondaryImage(imagePath: string) {
-  secondaryImage.value = imagePath
-  if (primaryImage.value === secondaryImage.value) {
+function setSecondaryImage(imageIdentifier: ImageIdentifier) {
+  secondaryImage.value = imageIdentifier
+  if (primaryImagePath.value === secondaryImagePath.value) {
     secondaryImage.value = undefined
   }
 }
 
 function adjustAlpha(event: WheelEvent) {
-  if (!secondaryImage.value) return
+  if (!secondaryImagePath.value) return
 
   const step = event.altKey ? 0.06 : 0.03
   const nextAlpha = (alpha.value[0] ? alpha.value[0] : 0) + (event.deltaY < 0 ? step : -step)
@@ -405,16 +432,12 @@ function goToNextImage() {
   const nextImageId = resultStore.getNextImageId(image.value)
   if (nextImageId) {
     image.value = nextImageId
-    primaryImage.value = realImagePath(nextImageId)
-    secondaryImage.value = undefined
   }
 }
 function goToPreviousImage() {
   const prevImageId = resultStore.getPreviousImageId(image.value)
   if (prevImageId) {
     image.value = prevImageId
-    primaryImage.value = realImagePath(prevImageId)
-    secondaryImage.value = undefined
   }
 }
 
