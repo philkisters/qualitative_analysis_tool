@@ -66,7 +66,8 @@ Start the development server at `http://localhost:3000`:
 pnpm dev
 ```
 
-Other useful commands:```bash
+Other useful commands:
+```bash
 pnpm lint       # Run ESLint
 pnpm typecheck  # Run Nuxt/Vue TypeScript checks
 pnpm build      # Build for production
