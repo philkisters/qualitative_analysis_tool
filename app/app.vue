@@ -58,9 +58,9 @@
           />
         </HeaderContainer>
       </div>
-      <USeparator />
+      <USeparator color="primary" />
       <div
-        class="flex w-full"
+        class="flex w-full items-center"
         @wheel.prevent="adjustAlpha"
       >
         <div class="flex-2 flex-col">
@@ -107,11 +107,12 @@
           />
           <ConfigSelection
             v-else
+            class="p-4"
             @confirm="setActiveConfig"
           />
         </div>
       </div>
-      <USeparator />
+      <USeparator color="primary" />
       <div class="text-center text-xl font-bold">
         Statistics
       </div>
@@ -120,7 +121,7 @@
           <div class="text-lg text-center">
             Image statistics
           </div>
-          <USeparator />
+          <USeparator color="primary" />
           <div class="grid grid-cols-2 gap-2 h-full">
             <StatsImageExitSlider
               :metrics="resultStore.exitMetrics.exit1"
@@ -144,12 +145,12 @@
             />
           </div>
         </div>
-        <USeparator orientation="vertical" />
+        <USeparator color="primary" orientation="vertical" />
         <div class="flex-2 flex flex-col gap-2">
           <div class="text-lg text-center">
             Class statistics
           </div>
-          <USeparator />
+          <USeparator color="primary" />
           <div class="flex w-full h-full items-center justify-center">
             <div class="text-muted italic text-3xl">
               Coming soon...

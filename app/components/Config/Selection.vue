@@ -1,20 +1,20 @@
 <template>
   <div class="flex flex-col w-full">
-    <div class="flex border-2 w-full">
-      <div class="flex-1 flex flex-col border-r-2 bg-gray-200">
-        <div class="text-lg font-bold p-2 border text-center">
+    <div class="flex border-2 border-primary/60 w-full">
+      <div class="flex-1 flex flex-col border-r-2 border-primary/60 bg-muted">
+        <div class="text-lg font-bold p-2 border border-primary/60 text-center">
           Device
         </div>
-        <div class="text-lg font-bold p-2 border text-center">
+        <div class="text-lg font-bold p-2 border border-primary/60 text-center">
           Kernel
         </div>
-        <div class="text-lg font-bold p-2 border text-center">
+        <div class="text-lg font-bold p-2 border border-primary/60 text-center">
           Start Stage
         </div>
-        <div class="text-lg font-bold p-2 border text-center">
+        <div class="text-lg font-bold p-2 border border-primary/60 text-center">
           Masked Branches
         </div>
-        <div class="text-lg font-bold p-2 border text-center">
+        <div class="text-lg font-bold p-2 border border-primary/60 text-center">
           Threshold
         </div>
       </div>
