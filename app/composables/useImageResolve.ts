@@ -16,7 +16,6 @@ export function compareImageIdentifiers(left: ImageIdentifier | undefined, right
 }
 
 export function useImageResolver() {
-
   function getImagePath(image: string, imageIdentifier: ImageIdentifier, config: Record<string, string> | undefined) {
     if (config === undefined || imageIdentifier.type === ImageType.Real) {
       return realImagePath(image)

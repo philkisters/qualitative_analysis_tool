@@ -107,7 +107,8 @@
           />
           <ConfigSelection
             v-else
-            @confirm="setActiveConfig" />
+            @confirm="setActiveConfig"
+          />
         </div>
       </div>
       <USeparator />
@@ -152,7 +153,10 @@
           <div class="flex w-full h-full items-center justify-center">
             <div class="text-muted italic text-3xl">
               Coming soon...
-              <UIcon name="mdi:trademark" class="animate-spin" />
+              <UIcon
+                name="mdi:trademark"
+                class="animate-spin"
+              />
             </div>
           </div>
         </div>
@@ -218,7 +222,7 @@ const config = computed(() => {
 })
 
 // query params required by the exit-specific image and results API endpoints
-const configQuery = computed(():Record<string, string> => {
+const configQuery = computed((): Record<string, string> => {
   if (!config.value) return {}
   return {
     device: config.value.device,
