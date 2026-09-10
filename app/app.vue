@@ -47,7 +47,7 @@
             size="xl"
             color="secondary"
             label="Select Config"
-            @click="selectedConfig = undefined"
+            @click="changeConfig()"
           />
           <UButton
             label="Copy active view"
@@ -97,139 +97,17 @@
             :overlay-image="secondaryImagePath"
           />
         </div>
-        <div class="flex-2 flex flex-col gap-2">
-          <div class="flex gap-2 items-center">
-            <div class="flex-2 text-lg text-right">
-              Raw Image
-            </div>
-            <PreviewImage
-              :show="showImage(getImagePath({ type: ImageType.Real, exit: 1 }))"
-              :color="getColor(getImagePath({ type: ImageType.Real, exit: 1 }))"
-              :image-path="getImagePath({ type: ImageType.Real, exit: 1 })"
-              @click="setPrimaryImage({ type: ImageType.Real, exit: 1 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.Real, exit: 1 })"
-            />
-            <PreviewImage
-              :show="showImage(getImagePath({ type: ImageType.GT, exit: 1 }))"
-              :color="getColor(getImagePath({ type: ImageType.GT, exit: 1 }))"
-              :image-path="getImagePath({ type: ImageType.GT, exit: 1 })"
-              @click="setPrimaryImage({ type: ImageType.GT, exit: 1 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.GT, exit: 1 })"
-            />
-            <div class="flex-2 text-lg text-left">
-              Ground Truth Labels
-            </div>
-          </div>
-          <div class="flex gap-2 text-center text-lg font-bold">
-            <div class="flex-2" />
-            <div class="flex-2">
-              Exit 1
-            </div>
-            <div class="flex-2">
-              Exit 2
-            </div>
-            <div class="flex-2">
-              Exit 3
-            </div>
-            <div class="flex-2">
-              Exit 4
-            </div>
-          </div>
-          <div class="flex gap-2 items-center">
-            <div class="flex-2 text-lg text-center">
-              Results
-            </div>
-            <PreviewImage
-              :show="showImage(getImagePath({ type: ImageType.Prediction, exit: 1 }))"
-              :color="getColor(getImagePath({ type: ImageType.Prediction, exit: 1 }))"
-              :image-path="getImagePath({ type: ImageType.Prediction, exit: 1 })"
-              @click="setPrimaryImage({ type: ImageType.Prediction, exit: 1 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.Prediction, exit: 1 })"
-            />
-            <PreviewImage
-              :show="showImage(getImagePath({ type: ImageType.Prediction, exit: 2 }))"
-              :color="getColor(getImagePath({ type: ImageType.Prediction, exit: 2 }))"
-              :image-path="getImagePath({ type: ImageType.Prediction, exit: 2 })"
-              @click="setPrimaryImage({ type: ImageType.Prediction, exit: 2 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.Prediction, exit: 2 })"
-            />
-            <PreviewImage
-              :show="showImage(getImagePath({ type: ImageType.Prediction, exit: 3 }))"
-              :color="getColor(getImagePath({ type: ImageType.Prediction, exit: 3 }))"
-              :image-path="getImagePath({ type: ImageType.Prediction, exit: 3 })"
-              @click="setPrimaryImage({ type: ImageType.Prediction, exit: 3 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.Prediction, exit: 3 })"
-            />
-            <PreviewImage
-              :show="showImage(getImagePath({ type: ImageType.Prediction, exit: 4 }))"
-              :color="getColor(getImagePath({ type: ImageType.Prediction, exit: 4 }))"
-              :image-path="getImagePath({ type: ImageType.Prediction, exit: 4 })"
-              @click="setPrimaryImage({ type: ImageType.Prediction, exit: 4 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.Prediction, exit: 4 })"
-            />
-          </div>
-          <div class="flex gap-2 items-center">
-            <div class="flex-2 text-lg text-center">
-              Pixel Mask
-            </div>
-            <div class="flex-1" />
-            <PreviewImage
-              border
-              :show="showImage(getImagePath({ type: ImageType.PixelMask, exit: 2 }))"
-              :color="getColor(getImagePath({ type: ImageType.PixelMask, exit: 2 }))"
-              :image-path="getImagePath({ type: ImageType.PixelMask, exit: 2 })"
-              @click="setPrimaryImage({ type: ImageType.PixelMask, exit: 2 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.PixelMask, exit: 2 })"
-            />
-            <PreviewImage
-              border
-              :show="showImage(getImagePath({ type: ImageType.PixelMask, exit: 3 }))"
-              :color="getColor(getImagePath({ type: ImageType.PixelMask, exit: 3 }))"
-              :image-path="getImagePath({ type: ImageType.PixelMask, exit: 3 })"
-              @click="setPrimaryImage({ type: ImageType.PixelMask, exit: 3 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.PixelMask, exit: 3 })"
-            />
-            <PreviewImage
-              border
-              :show="showImage(getImagePath({ type: ImageType.PixelMask, exit: 4 }))"
-              :color="getColor(getImagePath({ type: ImageType.PixelMask, exit: 4 }))"
-              :image-path="getImagePath({ type: ImageType.PixelMask, exit: 4 })"
-              @click="setPrimaryImage({ type: ImageType.PixelMask, exit: 4 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.PixelMask, exit: 4 })"
-            />
-            <div class="flex-1" />
-          </div>
-          <div class="flex gap-2 items-center">
-            <div class="flex-2 text-lg text-center">
-              Block Mask
-            </div>
-            <div class="flex-1" />
-            <PreviewImage
-              border
-              :show="showImage(getImagePath({ type: ImageType.BlockMask, exit: 2 }))"
-              :color="getColor(getImagePath({ type: ImageType.BlockMask, exit: 2 }))"
-              :image-path="getImagePath({ type: ImageType.BlockMask, exit: 2 })"
-              @click="setPrimaryImage({ type: ImageType.BlockMask, exit: 2 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.BlockMask, exit: 2 })"
-            />
-            <PreviewImage
-              :show="showImage(getImagePath({ type: ImageType.BlockMask, exit: 3 }))"
-              :color="getColor(getImagePath({ type: ImageType.BlockMask, exit: 3 }))"
-              :image-path="getImagePath({ type: ImageType.BlockMask, exit: 3 })"
-              border
-              @click="setPrimaryImage({ type: ImageType.BlockMask, exit: 3 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.BlockMask, exit: 3 })"
-            />
-            <PreviewImage
-              :show="showImage(getImagePath({ type: ImageType.BlockMask, exit: 4 }))"
-              :color="getColor(getImagePath({ type: ImageType.BlockMask, exit: 4 }))"
-              :image-path="getImagePath({ type: ImageType.BlockMask, exit: 4 })"
-              border
-              @click="setPrimaryImage({ type: ImageType.BlockMask, exit: 4 })"
-              @contextmenu.prevent="setSecondaryImage({ type: ImageType.BlockMask, exit: 4 })"
-            />
-            <div class="flex-1" />
-          </div>
+        <div class="flex-2">
+          <ImageOverview
+            v-if="!configChange"
+            v-model:primary="primaryImage"
+            v-model:secondary="secondaryImage"
+            :config="configQuery"
+            :image="image"
+          />
+          <ConfigSelection
+            v-else
+            @confirm="setActiveConfig" />
         </div>
       </div>
       <USeparator />
@@ -271,6 +149,12 @@
             Class statistics
           </div>
           <USeparator />
+          <div class="flex w-full h-full items-center justify-center">
+            <div class="text-muted italic text-3xl">
+              Coming soon...
+              <UIcon name="mdi:trademark" class="animate-spin" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -311,18 +195,7 @@ useSeoMeta({
   twitterCard: 'summary_large_image'
 })
 
-enum ImageType {
-  Real = 'real',
-  GT = 'gt',
-  Prediction = 'prediction',
-  PixelMask = 'pixel_mask',
-  BlockMask = 'block_mask'
-}
-
-type ImageIdentifier = {
-  type: ImageType
-  exit: 1 | 2 | 3 | 4
-}
+const { getImagePath } = useImageResolver()
 
 const route = useRoute()
 const toast = useToast()
@@ -331,11 +204,13 @@ const image = ref(typeof route.query.img === 'string' ? route.query.img : 'frank
 const selectedConfig = ref<number | undefined>(route.query.config && typeof route.query.config === 'string' ? Number(route.query.config) : undefined)
 
 const primaryImage = ref<ImageIdentifier>({ type: ImageType.Real, exit: 1 })
-const secondaryImage = ref<ImageIdentifier | undefined>(undefined)
+const secondaryImage = ref<ImageIdentifier>({ type: ImageType.GT, exit: 1 })
 
-const primaryImagePath = computed(() => getImagePath(primaryImage.value))
-const secondaryImagePath = computed(() => secondaryImage.value ? getImagePath(secondaryImage.value) : undefined)
+const primaryImagePath = computed(() => getImagePath(image.value, primaryImage.value, configQuery.value as Record<string, string>))
+const secondaryImagePath = computed(() => getImagePath(image.value, secondaryImage.value, configQuery.value as Record<string, string>))
 const alpha = ref([0.5])
+
+const configChange = ref(false)
 
 const config = computed(() => {
   if (selectedConfig.value === undefined) return undefined
@@ -343,38 +218,16 @@ const config = computed(() => {
 })
 
 // query params required by the exit-specific image and results API endpoints
-const configQuery = computed(() => {
+const configQuery = computed(():Record<string, string> => {
   if (!config.value) return {}
   return {
     device: config.value.device,
     kernel: config.value.kernel,
-    startStage: config.value.startStage,
-    branches: config.value.branches,
-    threshold: config.value.threshold
+    startStage: String(config.value.startStage),
+    branches: String(config.value.branches),
+    threshold: String(config.value.threshold)
   }
 })
-
-function getImagePath(imageIdentifier: ImageIdentifier) {
-  if (imageIdentifier.type === ImageType.Real) {
-    return realImagePath()
-  } else if (imageIdentifier.type === ImageType.GT) {
-    return gtImagePath()
-  } else {
-    return exitImagePathFromIdentifier(imageIdentifier)
-  }
-}
-
-function realImagePath() {
-  return `/api/images/${image.value}/real`
-}
-function gtImagePath() {
-  return `/api/images/${image.value}/gt`
-}
-
-function exitImagePathFromIdentifier(imageIdentifier: ImageIdentifier) {
-  const params = new URLSearchParams(configQuery.value as Record<string, string>)
-  return `/api/images/${image.value}/${imageIdentifier.exit}/${imageIdentifier.type as 'prediction' | 'pixel_mask' | 'block_mask'}?${params.toString()}`
-}
 
 watch(config, (newConfig) => {
   if (newConfig) {
@@ -382,15 +235,9 @@ watch(config, (newConfig) => {
   }
 }, { immediate: true })
 
-const showImage = (imagePath: string) => {
-  return primaryImagePath.value === imagePath || secondaryImagePath.value === imagePath
-}
-const getColor = (imagePath: string) => {
-  return primaryImagePath.value === imagePath ? 'primary' : 'secondary'
-}
-
 const setActiveConfig = (configIndex: number) => {
   selectedConfig.value = configIndex
+  configChange.value = false
 }
 
 const imageResults = (exit: 'exit1' | 'exit2' | 'exit3' | 'exit4') => {
@@ -404,19 +251,6 @@ const imageResults = (exit: 'exit1' | 'exit2' | 'exit3' | 'exit4') => {
     }
   }
   return resultStore.imageResults[image.value]![exit]
-}
-
-function setPrimaryImage(imageIdentifier: ImageIdentifier) {
-  primaryImage.value = imageIdentifier
-  if (primaryImagePath.value === secondaryImagePath.value) {
-    secondaryImage.value = undefined
-  }
-}
-function setSecondaryImage(imageIdentifier: ImageIdentifier) {
-  secondaryImage.value = imageIdentifier
-  if (primaryImagePath.value === secondaryImagePath.value) {
-    secondaryImage.value = undefined
-  }
 }
 
 function adjustAlpha(event: WheelEvent) {
@@ -469,5 +303,9 @@ function copyActiveView() {
       color: 'error'
     })
   })
+}
+
+function changeConfig() {
+  configChange.value = true
 }
 </script>

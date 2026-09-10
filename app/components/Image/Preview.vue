@@ -29,7 +29,3 @@ const { show, color, imagePath, border = false } = defineProps<{
 
 const position = computed(() => color === 'primary' ? 'top-left' : 'top-right')
 </script>
-
-<style>
-
-</style>

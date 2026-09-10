@@ -2,7 +2,7 @@
   <div class="flex gap-2 items-stretch">
     <div class="w-6">
       <USlider
-        v-if="overlayImage"
+        v-if="compareActive"
         v-model="alpha"
         :min="0"
         :max="1"
@@ -17,7 +17,7 @@
         class="block h-auto w-full"
       >
       <img
-        v-if="overlayImage"
+        v-if="compareActive"
         :src="overlayImage"
         alt="Overlay image"
         class="absolute inset-0 h-full w-full object-contain"
@@ -35,4 +35,5 @@ const { baseImage, overlayImage = '' } = defineProps<{
 
 const alpha = defineModel<number[]>('alpha', { default: () => [0.5] })
 const alphaValue = computed(() => alpha.value[0])
+const compareActive = computed(() => overlayImage !== baseImage)
 </script>
