@@ -145,7 +145,10 @@
             />
           </div>
         </div>
-        <USeparator color="primary" orientation="vertical" />
+        <USeparator
+          color="primary"
+          orientation="vertical"
+        />
         <div class="flex-2 flex flex-col gap-2">
           <div class="text-lg text-center">
             Class statistics
