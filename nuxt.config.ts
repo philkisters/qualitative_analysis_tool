@@ -21,6 +21,12 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
+  vite: {
+    server: {
+      allowedHosts: ['basecpu1.macaroni-hydra.ts.net']
+    }
+  },
+
   routeRules: {
     '/': { prerender: true }
   },

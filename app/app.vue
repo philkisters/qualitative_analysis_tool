@@ -56,6 +56,16 @@
             trailing-icon="lucide-share"
             @click="copyActiveView"
           />
+          <UButton
+            label="Download Images"
+            size="xl"
+            variant="outline"
+            color="neutral"
+            trailing-icon="lucide-download"
+            :loading="isDownloadingImages"
+            :disabled="isDownloadingImages"
+            @click="downloadImages"
+          />
         </HeaderContainer>
       </div>
       <USeparator color="primary" />
@@ -113,63 +123,48 @@
         </div>
       </div>
       <USeparator color="primary" />
-      <div class="text-center text-xl font-bold">
-        Statistics
-      </div>
       <div class="flex gap-4 h-full">
-        <div class="flex-2 flex flex-col gap-2">
+        <div class="flex-3 flex flex-col gap-2">
           <div class="text-lg text-center">
             Image statistics
           </div>
           <USeparator color="primary" />
-          <div class="grid grid-cols-2 gap-2 h-full">
-            <StatsImageExitSlider
-              :metrics="resultStore.exitMetrics.exit1"
-              :image-results="imageResults('exit1')"
-              title="Exit 1"
-            />
+          <div class="flex justify-stretch gap-2 h-full">
             <StatsImageExitSlider
               :metrics="resultStore.exitMetrics.exit2"
               :image-results="imageResults('exit2')"
               title="Exit 2"
+              class="flex-1"
             />
             <StatsImageExitSlider
               :metrics="resultStore.exitMetrics.exit3"
               :image-results="imageResults('exit3')"
               title="Exit 3"
+              class="flex-1"
             />
             <StatsImageExitSlider
               :metrics="resultStore.exitMetrics.exit4"
               :image-results="imageResults('exit4')"
               title="Exit 4"
+              class="flex-1"
             />
           </div>
         </div>
-        <USeparator
-          color="primary"
-          orientation="vertical"
+        <USeparator 
+          color="primary" 
+          orientation="vertical" 
         />
-        <div class="flex-2 flex flex-col gap-2">
-          <div class="text-lg text-center">
-            Class statistics
-          </div>
-          <USeparator color="primary" />
-          <div class="flex w-full h-full items-center justify-center">
-            <div class="text-muted italic text-3xl">
-              Coming soon...
-              <UIcon
-                name="mdi:trademark"
-                class="animate-spin"
-              />
-            </div>
-          </div>
-        </div>
+        <Shortcuts 
+          class="flex-2" 
+          @navigate="goToImage" 
+        />
       </div>
     </div>
   </UApp>
 </template>
 
 <script setup lang="ts">
+import JSZip from 'jszip'
 import { useResultStore } from './composables/stores/ResultsStore'
 import { useConfigStore } from './composables/stores/ConfigStore'
 
@@ -217,6 +212,7 @@ const secondaryImage = ref<ImageIdentifier>({ type: ImageType.GT, exit: 1 })
 const primaryImagePath = computed(() => getImagePath(image.value, primaryImage.value, configQuery.value as Record<string, string>))
 const secondaryImagePath = computed(() => getImagePath(image.value, secondaryImage.value, configQuery.value as Record<string, string>))
 const alpha = ref([0.5])
+const isDownloadingImages = ref(false)
 
 const configChange = ref(false)
 
@@ -315,5 +311,85 @@ function copyActiveView() {
 
 function changeConfig() {
   configChange.value = true
+}
+
+function goToImage(imageId: string) {
+  if (imageId) {
+    image.value = imageId
+  }
+}
+
+async function downloadImages() {
+  if (isDownloadingImages.value) return
+
+  const imageFile = (filename: string, type: ImageType, exit: ImageIdentifier['exit']) => ({
+    filename,
+    identifier: { type, exit }
+  })
+  const images = [
+    imageFile('real.png', ImageType.Real, 1),
+    imageFile('ground-truth.png', ImageType.GT, 1),
+    ...([1, 2, 3, 4] as const).map(exit => imageFile(`exit${exit}_prediction.png`, ImageType.Prediction, exit)),
+    ...([2, 3, 4] as const).flatMap(exit => [
+      imageFile(`exit${exit}_pixel-mask.png`, ImageType.PixelMask, exit),
+      imageFile(`exit${exit}_block-mask.png`, ImageType.BlockMask, exit)
+    ])
+  ]
+
+  isDownloadingImages.value = true
+
+  try {
+    const archive = new JSZip()
+    const resultsUrl = `/api/results/${image.value}?${new URLSearchParams(configQuery.value)}`
+    const [files, resultsResponse] = await Promise.all([
+      Promise.all(images.map(async ({ filename, identifier }) => {
+        const response = await fetch(getImagePath(image.value, identifier, configQuery.value))
+        if (!response.ok) {
+          throw new Error(`Could not download ${filename}`)
+        }
+
+        return { filename, blob: await response.blob() }
+      })),
+      fetch(resultsUrl)
+    ])
+
+    if (!resultsResponse.ok) {
+      throw new Error('Could not download results.json')
+    }
+
+    const allImageResults = await resultsResponse.json() as Record<string, unknown>
+    const selectedImageResults = allImageResults[image.value]
+    if (selectedImageResults === undefined) {
+      throw new Error(`No results found for ${image.value}`)
+    }
+
+    for (const { filename, blob } of files) {
+      archive.file(filename, blob)
+    }
+    archive.file('results.json', JSON.stringify({ [image.value]: selectedImageResults }, null, 2))
+
+    const archiveBlob = await archive.generateAsync({ type: 'blob' })
+    const downloadUrl = URL.createObjectURL(archiveBlob)
+    const downloadLink = document.createElement('a')
+    downloadLink.href = downloadUrl
+    downloadLink.download = `${image.value}-images.zip`
+    downloadLink.click()
+    URL.revokeObjectURL(downloadUrl)
+
+    toast.add({
+      title: 'Image archive downloaded',
+      description: `${image.value}-images.zip`,
+      color: 'success'
+    })
+  } catch (error) {
+    console.error('Failed to download image archive:', error)
+    toast.add({
+      title: 'Image download failed',
+      description: error instanceof Error ? error.message : 'The image archive could not be created.',
+      color: 'error'
+    })
+  } finally {
+    isDownloadingImages.value = false
+  }
 }
 </script>

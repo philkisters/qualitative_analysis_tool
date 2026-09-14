@@ -7,10 +7,12 @@ The tool makes it possible to inspect an image at several prediction exits and c
 - the raw input image;
 - the ground-truth labels;
 - the prediction produced at each exit;
-- the pixel mask used for sparse convolution; and
-- the block mask used for sparse convolution.
+- the pixel mask used in sparse convolution; and
+- the block mask used in sparse convolution.
 
 It also presents image-level statistics for each exit, including mean IoU, runtime, and sparsity when it is available.
+
+For a live demo, visit https://basecpu1.macaroni-hydra.ts.net/.
 
 ## Example data
 
@@ -27,7 +29,7 @@ The examples come from the Cityscapes `frankfurt` and `munster` sequences. The a
 
 Before opening the comparison view, select a prediction configuration by choosing the device, kernel, start stage, masked branches, and threshold. The five configuration categories are fixed in the interface, while the available combinations are loaded from `configs.json`.
 
-The application expects a `configs.json` file in the directory specified by the `NUXT_RESULTS_PATH` environment variable. Only configurations listed in this file can be selected. The `results` directory structure encodes the selected configuration parameters.
+The application expects a `configs.json` file in the directory specified by the `NUXT_RESULTS_PATH` environment variable. Only configurations listed in this file can be selected. The `results` directory structure reflects the selected configuration parameters.
 
 
 ## Using the Analysis View
@@ -36,7 +38,7 @@ The application expects a `configs.json` file in the directory specified by the 
 
 The Analysis View is divided into three main sections:
 
-1. **Header:** Use the previous and next buttons to navigate through the available images. Only images with available results are shown. On the right, you can select a different configuration when multiple analysis runs are available. You can also copy the active view, including the selected image and configuration, to share it with colleagues.
+1. **Header:** Use the previous and next buttons to navigate through the available images. Only images with available results are shown. On the right, you can select a different configuration when multiple analysis runs are available. You can also copy the active view, including the selected image and configuration, to share it with colleagues. Lastly you can download all the images and the `results.json` from that image id for further visualization or local usage.
 
 2. **Image Comparison View:** This section allows you to compare two images. The base image is marked with a green dot in the top-left corner, while the overlay image is marked with a blue dot in the top-right corner. The overlay is displayed on top of the base image, and its opacity can be adjusted with the vertical slider or the mouse wheel.
 
@@ -46,6 +48,7 @@ The Analysis View is divided into three main sections:
 
    The Class Statistics panel on the right is not implemented yet. It is planned to show the number of classes present in the image and compare the mIoU of each class with the corresponding mIoU across the complete dataset.
 
+4. **Shortcuts:** The shortcuts let you jump between the most extreme results, the minimum and maximum values, for *mIoU*, *sparsity*, and *runtime*.
 
 ## Requirements
 

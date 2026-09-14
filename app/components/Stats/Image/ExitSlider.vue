@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-2 border border-slate-300 p-2">
-    <div class="text-center">
+    <div class="text-center text-lg font-bold">
       {{ title }}
     </div>
     <div class="flex h-full gap-2">

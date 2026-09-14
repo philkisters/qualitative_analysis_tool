@@ -146,7 +146,22 @@ export const useResultStore = defineStore('results', {
         return null
       }
       return imageIds[(currentIndex - 1) < 0 ? imageIds.length - 1 : currentIndex - 1]
+    },
+    getImageIdForMetricValue: state => (exit: 'exit1' | 'exit2' | 'exit3' | 'exit4', metric: 'time_s' | 'mean_IoU' | 'pixel_acc' | 'mean_acc' | 'sparsity', target: 'min' | 'max') => {
+      const imageIds = Object.keys(state.imageResults)
+      let targetImageId: string | null = null
+      let targetValue: number | null = null
+
+      for (const imageId of imageIds) {
+        const value = state.imageResults[imageId]![exit][metric]
+        if (typeof value !== 'number') continue
+        if (targetValue === null || (target === 'min' ? value < targetValue : value > targetValue)) {
+          targetValue = value
+          targetImageId = imageId
+        }
+      }
+
+      return targetImageId
     }
   }
-
 })
