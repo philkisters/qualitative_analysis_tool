@@ -43,7 +43,10 @@
           <div class="text-lg content-center ml-10">
             Order images by:
           </div>
-          <HeaderOrderSelection @update:order="updateOrder" class="w-36"/>
+          <HeaderOrderSelection
+            class="w-36"
+            @update:order="updateOrder"
+          />
         </HeaderContainer>
         <HeaderContainer>
           <div />

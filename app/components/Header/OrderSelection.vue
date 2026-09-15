@@ -11,7 +11,6 @@
 <script lang="ts" setup>
 import type { Metric } from '~/composables/stores/ResultsStore'
 
-
 const emit = defineEmits<{
   (e: 'update:order', order: ('id' | Metric)): void
 }>()
@@ -22,5 +21,4 @@ const items = ref<(Metric | 'id')[]>(['id', 'time_s', 'mean_IoU', 'pixel_acc', '
 watch(order, (newValue: 'id' | Metric) => {
   emit('update:order', newValue)
 })
-
 </script>

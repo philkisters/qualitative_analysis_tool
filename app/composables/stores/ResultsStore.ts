@@ -227,16 +227,6 @@ export const useResultStore = defineStore('results', {
 
         return targetImageId
       }
-    },
-    getSortedImages: state => {
-      const imageIds = Object.keys(state.imageResults).sort((a, b) => {
-        if (state.order === 'id') {
-          return a.localeCompare(b)
-        }
-        const valueA = state.imageResults[a]!['exit4'][state.order] || 0
-        const valueB = state.imageResults[b]!['exit4'][state.order] || 0
-        return valueA - valueB
-      })
     }
   }
 })
