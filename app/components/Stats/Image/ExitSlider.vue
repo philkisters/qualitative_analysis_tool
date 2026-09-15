@@ -26,7 +26,10 @@
         :current="imageResults.sparsity"
       />
     </div>
-    <div v-if="hasDelta" class="flex h-full gap-2">
+    <div
+      v-if="hasDelta"
+      class="flex h-full gap-2"
+    >
       <StatsImageVerticalSlider
         title="mIoU"
         delta

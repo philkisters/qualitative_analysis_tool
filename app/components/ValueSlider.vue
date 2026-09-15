@@ -19,8 +19,11 @@
           class="absolute -inset-x-3 truncate text-primary transition-[top,transform] duration-1000 ease-out flex items-center"
           :class="valuePosition <= 4 ? 'translate-y-0' : '-translate-y-1/2'"
           :style="{ top: `${valuePosition}%` }"
-          >
-          <UIcon name="lucide-chevron-left" size="1"/>
+        >
+          <UIcon
+            name="lucide-chevron-left"
+            size="1"
+          />
           {{ value.toFixed(3) }}
         </span>
         <span

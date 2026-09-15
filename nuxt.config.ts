@@ -21,17 +21,17 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
-  vite: {
-    server: {
-      allowedHosts: ['basecpu1.macaroni-hydra.ts.net']
-    }
-  },
-
   routeRules: {
     '/': { prerender: true }
   },
 
   compatibilityDate: '2026-06-30',
+
+  vite: {
+    server: {
+      allowedHosts: ['basecpu1.macaroni-hydra.ts.net']
+    }
+  },
 
   eslint: {
     config: {

@@ -14,13 +14,19 @@
         <div class="font-bold text-xl text-center">
           Exit 3
         </div>
-        <ShortcutsButtons exit="exit3" @navigate="emit('navigate', $event)"/>
+        <ShortcutsButtons
+          exit="exit3"
+          @navigate="emit('navigate', $event)"
+        />
       </div>
       <div class="flex-1 flex flex-col gap-2">
         <div class="font-bold text-xl text-center">
           Exit 4
         </div>
-        <ShortcutsButtons exit="exit4" @navigate="emit('navigate', $event)"/>
+        <ShortcutsButtons
+          exit="exit4"
+          @navigate="emit('navigate', $event)"
+        />
       </div>
     </div>
   </div>

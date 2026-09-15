@@ -150,13 +150,13 @@
             />
           </div>
         </div>
-        <USeparator 
-          color="primary" 
-          orientation="vertical" 
+        <USeparator
+          color="primary"
+          orientation="vertical"
         />
-        <Shortcuts 
-          class="flex-2" 
-          @navigate="goToImage" 
+        <Shortcuts
+          class="flex-2"
+          @navigate="goToImage"
         />
       </div>
     </div>

@@ -4,7 +4,10 @@
       v-if="resultStore.loaded"
       class="text-center"
     >
-      <UIcon v-if="delta" name="lucide-triangle" />
+      <UIcon
+        v-if="delta"
+        name="lucide-triangle"
+      />
       {{ title }}
     </div>
     <USkeleton

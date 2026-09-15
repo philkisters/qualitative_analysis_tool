@@ -84,7 +84,10 @@
         @click="setPrimaryImage({ type: ImageType.PixelMask, exit: 2 })"
         @contextmenu.prevent="setSecondaryImage({ type: ImageType.PixelMask, exit: 2 })"
       />
-      <div v-else class="flex-2" />
+      <div
+        v-else
+        class="flex-2"
+      />
       <ImagePreview
         v-if="config.startStage === '2'"
         border
@@ -94,7 +97,10 @@
         @click="setPrimaryImage({ type: ImageType.PixelMask, exit: 3 })"
         @contextmenu.prevent="setSecondaryImage({ type: ImageType.PixelMask, exit: 3 })"
       />
-      <div v-else class="flex-2" />
+      <div
+        v-else
+        class="flex-2"
+      />
       <ImagePreview
         border
         :show="showImage({ type: ImageType.PixelMask, exit: 4 })"
@@ -119,7 +125,10 @@
         @click="setPrimaryImage({ type: ImageType.BlockMask, exit: 2 })"
         @contextmenu.prevent="setSecondaryImage({ type: ImageType.BlockMask, exit: 2 })"
       />
-      <div v-else class="flex-2" />
+      <div
+        v-else
+        class="flex-2"
+      />
       <ImagePreview
         v-if="config.startStage === '2'"
         :show="showImage({ type: ImageType.BlockMask, exit: 3 })"
@@ -129,7 +138,10 @@
         @click="setPrimaryImage({ type: ImageType.BlockMask, exit: 3 })"
         @contextmenu.prevent="setSecondaryImage({ type: ImageType.BlockMask, exit: 3 })"
       />
-      <div v-else class="flex-2" />
+      <div
+        v-else
+        class="flex-2"
+      />
       <ImagePreview
         :show="showImage({ type: ImageType.BlockMask, exit: 4 })"
         :color="getColor({ type: ImageType.BlockMask, exit: 4 })"
