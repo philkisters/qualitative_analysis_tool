@@ -64,6 +64,7 @@ export type Metric = typeof metrics[number]
 
 type storeState = {
   exitMetrics: ExitMetrics
+  order: Metric | 'id'
   imageResults: ImageResults
   isLoading: boolean
   loaded: boolean
@@ -84,11 +85,15 @@ export const useResultStore = defineStore('results', {
         exit4: defaultResultMetrics
       },
       imageResults: {},
+      order: 'id',
       isLoading: false,
       loaded: false
     }
   },
   actions: {
+    setOrder(value: Metric | 'id') {
+      this.order = value
+    },
     async fetchResults(config: PredictionConfig, imageid: string) {
       if (this.isLoading) {
         return
@@ -155,7 +160,14 @@ export const useResultStore = defineStore('results', {
   },
   getters: {
     getNextImageId: state => (currentImageId: string) => {
-      const imageIds = Object.keys(state.imageResults)
+      const imageIds = Object.keys(state.imageResults).sort((a, b) => {
+        if (state.order === 'id') {
+          return a.localeCompare(b)
+        }
+        const valueA = state.imageResults[a]!['exit4'][state.order] || 0
+        const valueB = state.imageResults[b]!['exit4'][state.order] || 0
+        return valueA - valueB
+      })
       const currentIndex = imageIds.indexOf(currentImageId)
       if (currentIndex === -1) {
         return null
@@ -163,7 +175,14 @@ export const useResultStore = defineStore('results', {
       return imageIds[(currentIndex + 1) % imageIds.length]
     },
     getPreviousImageId: state => (currentImageId: string) => {
-      const imageIds = Object.keys(state.imageResults)
+      const imageIds = Object.keys(state.imageResults).sort((a, b) => {
+        if (state.order === 'id') {
+          return a.localeCompare(b)
+        }
+        const valueA = state.imageResults[a]!['exit4'][state.order] || 0
+        const valueB = state.imageResults[b]!['exit4'][state.order] || 0
+        return valueA - valueB
+      })
       const currentIndex = imageIds.indexOf(currentImageId)
       if (currentIndex < 0) {
         return null
@@ -208,6 +227,16 @@ export const useResultStore = defineStore('results', {
 
         return targetImageId
       }
+    },
+    getSortedImages: state => {
+      const imageIds = Object.keys(state.imageResults).sort((a, b) => {
+        if (state.order === 'id') {
+          return a.localeCompare(b)
+        }
+        const valueA = state.imageResults[a]!['exit4'][state.order] || 0
+        const valueB = state.imageResults[b]!['exit4'][state.order] || 0
+        return valueA - valueB
+      })
     }
   }
 })

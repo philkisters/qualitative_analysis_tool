@@ -40,6 +40,10 @@
             icon="i-lucide-move-right"
             @click="goToNextImage"
           />
+          <div class="text-lg content-center ml-10">
+            Order images by:
+          </div>
+          <HeaderOrderSelection @update:order="updateOrder" class="w-36"/>
         </HeaderContainer>
         <HeaderContainer>
           <div />
@@ -165,7 +169,7 @@
 
 <script setup lang="ts">
 import JSZip from 'jszip'
-import { useResultStore } from './composables/stores/ResultsStore'
+import { useResultStore, type Metric } from './composables/stores/ResultsStore'
 import { useConfigStore } from './composables/stores/ConfigStore'
 
 const resultStore = useResultStore()
@@ -321,6 +325,10 @@ function goToImage(imageId: string) {
   if (imageId) {
     image.value = imageId
   }
+}
+
+function updateOrder(order: Metric | 'id') {
+  resultStore.setOrder(order)
 }
 
 async function downloadImages() {
