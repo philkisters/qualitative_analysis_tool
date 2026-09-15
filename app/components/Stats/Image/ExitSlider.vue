@@ -10,6 +10,11 @@
         :current="imageResults.mean_IoU"
       />
       <StatsImageVerticalSlider
+        title="Pixel Accuracy"
+        :metric="metrics.pixel_acc"
+        :current="imageResults.pixel_acc"
+      />
+      <StatsImageVerticalSlider
         title="Runtime (s)"
         :metric="metrics.time_s"
         :current="imageResults.time_s"
@@ -21,6 +26,26 @@
         :current="imageResults.sparsity"
       />
     </div>
+    <div v-if="hasDelta" class="flex h-full gap-2">
+      <StatsImageVerticalSlider
+        title="mIoU"
+        delta
+        :metric="metrics.delta_mean_IoU"
+        :current="imageResults.delta_mean_IoU"
+      />
+      <StatsImageVerticalSlider
+        title="Pixel Accuracy"
+        delta
+        :metric="metrics.delta_pixel_acc"
+        :current="imageResults.delta_pixel_acc"
+      />
+      <StatsImageVerticalSlider
+        title="Runtime (s)"
+        delta
+        :metric="metrics.delta_time_s"
+        :current="imageResults.delta_time_s"
+      />
+    </div>
   </div>
 </template>
 
@@ -30,8 +55,6 @@ import { useResultStore, type ResultMetrics, type Results } from '~/composables/
 const { title, metrics, imageResults } = defineProps<{ title: string, metrics: ResultMetrics, imageResults: Results }>()
 
 const resultStore = useResultStore()
+
+const hasDelta = computed(() => resultStore.hasDelta())
 </script>
-
-<style>
-
-</style>

@@ -124,7 +124,7 @@
       </div>
       <USeparator color="primary" />
       <div class="flex gap-4 h-full">
-        <div class="flex-3 flex flex-col gap-2">
+        <div class="flex-4 flex flex-col gap-2">
           <div class="text-lg text-center">
             Image statistics
           </div>
@@ -251,7 +251,11 @@ const imageResults = (exit: 'exit1' | 'exit2' | 'exit3' | 'exit4') => {
       mean_IoU: 0,
       pixel_acc: 0,
       mean_acc: 0,
-      sparsity: 0
+      sparsity: 0,
+      delta_time_s: 0,
+      delta_mean_IoU: 0,
+      delta_pixel_acc: 0,
+      delta_mean_acc: 0
     }
   }
   return resultStore.imageResults[image.value]![exit]
@@ -326,11 +330,24 @@ async function downloadImages() {
     filename,
     identifier: { type, exit }
   })
+  const exits = [] as (1 | 2 | 3 | 4)[]
+  switch (config.value?.startStage ?? 1) {
+    case 1:
+      exits.push(2, 3, 4)
+      break
+    case 2:
+      exits.push(3, 4)
+      break
+    case 3:
+      exits.push(4)
+      break
+  }
+
   const images = [
     imageFile('real.png', ImageType.Real, 1),
     imageFile('ground-truth.png', ImageType.GT, 1),
     ...([1, 2, 3, 4] as const).map(exit => imageFile(`exit${exit}_prediction.png`, ImageType.Prediction, exit)),
-    ...([2, 3, 4] as const).flatMap(exit => [
+    ...exits.flatMap(exit => [
       imageFile(`exit${exit}_pixel-mask.png`, ImageType.PixelMask, exit),
       imageFile(`exit${exit}_block-mask.png`, ImageType.BlockMask, exit)
     ])

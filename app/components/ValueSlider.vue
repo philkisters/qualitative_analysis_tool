@@ -3,12 +3,12 @@
     <div class="relative h-full w-5 shrink-0">
       <div class="absolute inset-y-0 left-1/2 w-1 -translate-x-1/2 rounded-full bg-slate-200" />
       <div
-        class="absolute left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500 ring-2 ring-white transition-[top] duration-1000 ease-out"
-        :style="{ top: `${meanPosition}%` }"
+        class="absolute left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-green-500 ring-2 ring-white transition-[top] duration-1000 ease-out"
+        :style="{ top: `${valuePosition}%` }"
       />
       <div
-        class="absolute left-0 w-full border-t-2 border-primary transition-[top] duration-1000 ease-out"
-        :style="{ top: `${valuePosition}%` }"
+        class="absolute left-0 w-full border-t-2 border-secondary transition-[top] duration-1000 ease-out"
+        :style="{ top: `${meanPosition}%` }"
       />
     </div>
 
@@ -16,11 +16,19 @@
       <template v-if="resultStore.loaded">
         <span class="absolute inset-x-0 top-0 truncate">{{ metric.max.toFixed(3) }}</span>
         <span
-          class="absolute inset-x-0 truncate text-primary transition-[top,transform] duration-1000 ease-out"
+          class="absolute -inset-x-3 truncate text-primary transition-[top,transform] duration-1000 ease-out flex items-center"
           :class="valuePosition <= 4 ? 'translate-y-0' : '-translate-y-1/2'"
           :style="{ top: `${valuePosition}%` }"
-        >
+          >
+          <UIcon name="lucide-chevron-left" size="1"/>
           {{ value.toFixed(3) }}
+        </span>
+        <span
+          class="absolute inset-x-0 truncate text-secondary"
+          :class="meanPosition <= 4 ? 'translate-y-0' : '-translate-y-1/2'"
+          :style="{ top: `${meanPosition}%` }"
+        >
+          {{ metric.mean.toFixed(3) }}
         </span>
         <span class="absolute inset-x-0 bottom-0 truncate">{{ metric.min.toFixed(3) }}</span>
       </template>

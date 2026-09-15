@@ -76,6 +76,7 @@
       </div>
       <div class="flex-1" />
       <ImagePreview
+        v-if="config.startStage === '1'"
         border
         :show="showImage({ type: ImageType.PixelMask, exit: 2 })"
         :color="getColor({ type: ImageType.PixelMask, exit: 2 })"
@@ -83,7 +84,9 @@
         @click="setPrimaryImage({ type: ImageType.PixelMask, exit: 2 })"
         @contextmenu.prevent="setSecondaryImage({ type: ImageType.PixelMask, exit: 2 })"
       />
+      <div v-else class="flex-2" />
       <ImagePreview
+        v-if="config.startStage === '2'"
         border
         :show="showImage({ type: ImageType.PixelMask, exit: 3 })"
         :color="getColor({ type: ImageType.PixelMask, exit: 3 })"
@@ -91,6 +94,7 @@
         @click="setPrimaryImage({ type: ImageType.PixelMask, exit: 3 })"
         @contextmenu.prevent="setSecondaryImage({ type: ImageType.PixelMask, exit: 3 })"
       />
+      <div v-else class="flex-2" />
       <ImagePreview
         border
         :show="showImage({ type: ImageType.PixelMask, exit: 4 })"
@@ -107,6 +111,7 @@
       </div>
       <div class="flex-1" />
       <ImagePreview
+        v-if="config.startStage === '1'"
         border
         :show="showImage({ type: ImageType.BlockMask, exit: 2 })"
         :color="getColor({ type: ImageType.BlockMask, exit: 2 })"
@@ -114,7 +119,9 @@
         @click="setPrimaryImage({ type: ImageType.BlockMask, exit: 2 })"
         @contextmenu.prevent="setSecondaryImage({ type: ImageType.BlockMask, exit: 2 })"
       />
+      <div v-else class="flex-2" />
       <ImagePreview
+        v-if="config.startStage === '2'"
         :show="showImage({ type: ImageType.BlockMask, exit: 3 })"
         :color="getColor({ type: ImageType.BlockMask, exit: 3 })"
         :image-path="getImagePath(image, { type: ImageType.BlockMask, exit: 3 }, config)"
@@ -122,6 +129,7 @@
         @click="setPrimaryImage({ type: ImageType.BlockMask, exit: 3 })"
         @contextmenu.prevent="setSecondaryImage({ type: ImageType.BlockMask, exit: 3 })"
       />
+      <div v-else class="flex-2" />
       <ImagePreview
         :show="showImage({ type: ImageType.BlockMask, exit: 4 })"
         :color="getColor({ type: ImageType.BlockMask, exit: 4 })"
@@ -152,7 +160,6 @@ const getColor = (imageIdentifier: ImageIdentifier) => {
 }
 
 function setPrimaryImage(imageIdentifier: ImageIdentifier) {
-  console.log(`Setting primary image to: ${imageIdentifier.type} ${imageIdentifier.exit}`)
   primaryImage.value = imageIdentifier
 }
 

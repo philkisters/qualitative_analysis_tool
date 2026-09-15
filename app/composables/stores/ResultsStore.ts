@@ -13,6 +13,10 @@ export type ResultMetrics = {
   pixel_acc: MetricValues
   mean_acc: MetricValues
   sparsity: MetricValues
+  delta_time_s: MetricValues
+  delta_mean_IoU: MetricValues
+  delta_pixel_acc: MetricValues
+  delta_mean_acc: MetricValues
 }
 
 export type ExitMetrics = {
@@ -28,6 +32,10 @@ export type Results = {
   pixel_acc: number
   mean_acc: number
   sparsity: number
+  delta_time_s: number
+  delta_mean_IoU: number
+  delta_pixel_acc: number
+  delta_mean_acc: number
 }
 
 export type ImageResult = {
@@ -39,16 +47,20 @@ export type ImageResult = {
 
 export type ImageResults = Record<string, ImageResult>
 
+type OptionalResultKeys = 'sparsity' | 'delta_time_s' | 'delta_mean_IoU' | 'delta_pixel_acc' | 'delta_mean_acc'
+
 type RawImageResult = {
-  [Exit in typeof exits[number]]: Omit<Results, 'sparsity'> & {
-    sparsity?: number
+  [Exit in typeof exits[number]]: Omit<Results, OptionalResultKeys> & {
+    [Key in OptionalResultKeys]?: number
   }
 }
 
 type RawImageResults = Record<string, RawImageResult>
 
 const exits = ['exit1', 'exit2', 'exit3', 'exit4'] as const
-const metrics = ['time_s', 'mean_IoU', 'pixel_acc', 'mean_acc', 'sparsity'] as const
+const metrics = ['time_s', 'mean_IoU', 'pixel_acc', 'mean_acc', 'sparsity', 'delta_time_s', 'delta_mean_IoU', 'delta_pixel_acc', 'delta_mean_acc'] as const
+
+export type Metric = typeof metrics[number]
 
 type storeState = {
   exitMetrics: ExitMetrics
@@ -58,17 +70,24 @@ type storeState = {
 }
 
 export const useResultStore = defineStore('results', {
-  state: (): storeState => ({
-    exitMetrics: {
-      exit1: { time_s: { min: 0, max: 1, mean: 0.5 }, mean_IoU: { min: 0, max: 1, mean: 0.5 }, pixel_acc: { min: 0, max: 1, mean: 0.5 }, mean_acc: { min: 0, max: 1, mean: 0.5 }, sparsity: { min: 0, max: 1, mean: 0.5 } },
-      exit2: { time_s: { min: 0, max: 1, mean: 0.5 }, mean_IoU: { min: 0, max: 1, mean: 0.5 }, pixel_acc: { min: 0, max: 1, mean: 0.5 }, mean_acc: { min: 0, max: 1, mean: 0.5 }, sparsity: { min: 0, max: 1, mean: 0.5 } },
-      exit3: { time_s: { min: 0, max: 1, mean: 0.5 }, mean_IoU: { min: 0, max: 1, mean: 0.5 }, pixel_acc: { min: 0, max: 1, mean: 0.5 }, mean_acc: { min: 0, max: 1, mean: 0.5 }, sparsity: { min: 0, max: 1, mean: 0.5 } },
-      exit4: { time_s: { min: 0, max: 1, mean: 0.5 }, mean_IoU: { min: 0, max: 1, mean: 0.5 }, pixel_acc: { min: 0, max: 1, mean: 0.5 }, mean_acc: { min: 0, max: 1, mean: 0.5 }, sparsity: { min: 0, max: 1, mean: 0.5 } }
-    },
-    imageResults: {},
-    isLoading: false,
-    loaded: false
-  }),
+  state: (): storeState => {
+    const defaultResultMetrics = metrics.reduce((resultMetrics, metric) => {
+      resultMetrics[metric] = { min: 0, max: 1, mean: 0.5 }
+      return resultMetrics
+    }, {} as ResultMetrics)
+
+    return {
+      exitMetrics: {
+        exit1: defaultResultMetrics,
+        exit2: defaultResultMetrics,
+        exit3: defaultResultMetrics,
+        exit4: defaultResultMetrics
+      },
+      imageResults: {},
+      isLoading: false,
+      loaded: false
+    }
+  },
   actions: {
     async fetchResults(config: PredictionConfig, imageid: string) {
       if (this.isLoading) {
@@ -96,7 +115,11 @@ export const useResultStore = defineStore('results', {
                 exit,
                 {
                   ...result[exit],
-                  sparsity: result[exit].sparsity ?? 0
+                  sparsity: result[exit].sparsity ?? 0,
+                  delta_time_s: result[exit].delta_time_s ?? 0,
+                  delta_mean_IoU: result[exit].delta_mean_IoU ?? 0,
+                  delta_pixel_acc: result[exit].delta_pixel_acc ?? 0,
+                  delta_mean_acc: result[exit].delta_mean_acc ?? 0
                 }
               ])
             )
@@ -147,21 +170,44 @@ export const useResultStore = defineStore('results', {
       }
       return imageIds[(currentIndex - 1) < 0 ? imageIds.length - 1 : currentIndex - 1]
     },
-    getImageIdForMetricValue: state => (exit: 'exit1' | 'exit2' | 'exit3' | 'exit4', metric: 'time_s' | 'mean_IoU' | 'pixel_acc' | 'mean_acc' | 'sparsity', target: 'min' | 'max') => {
+    hasDelta: state => () => {
       const imageIds = Object.keys(state.imageResults)
-      let targetImageId: string | null = null
-      let targetValue: number | null = null
-
       for (const imageId of imageIds) {
-        const value = state.imageResults[imageId]![exit][metric]
-        if (typeof value !== 'number') continue
-        if (targetValue === null || (target === 'min' ? value < targetValue : value > targetValue)) {
-          targetValue = value
-          targetImageId = imageId
+        const exits = Object.keys(state.imageResults[imageId]!) as ('exit1' | 'exit2' | 'exit3' | 'exit4')[]
+        for (const exit of exits) {
+          const metrics = Object.keys(state.imageResults[imageId]![exit]) as Metric[]
+          for (const metric of metrics) {
+            if (metric.startsWith('delta_')) {
+              const value = state.imageResults[imageId]![exit][metric]
+              if (typeof value === 'number' && value !== 0) {
+                return true
+              }
+            }
+          }
         }
       }
+      return false
+    },
+    getImageIdForMetricValue(state) {
+      return (exit: 'exit1' | 'exit2' | 'exit3' | 'exit4', metric: Metric, target: 'min' | 'max') => {
+        if (metric.startsWith('delta_') && !this.hasDelta()) {
+          return null
+        }
+        const imageIds = Object.keys(state.imageResults)
+        let targetImageId: string | null = null
+        let targetValue: number | null = null
 
-      return targetImageId
+        for (const imageId of imageIds) {
+          const value = state.imageResults[imageId]![exit][metric]
+          if (typeof value !== 'number') continue
+          if (targetValue === null || (target === 'min' ? value < targetValue : value > targetValue)) {
+            targetValue = value
+            targetImageId = imageId
+          }
+        }
+
+        return targetImageId
+      }
     }
   }
 })

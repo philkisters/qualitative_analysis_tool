@@ -158,6 +158,29 @@ Only configurations listed in `configs.json` can be selected. The `results.json`
 
 `sparsity` is optional in the input data. Missing values are treated as `0` by the application; the bundled examples omit it for `exit1`.
 
+### Optional baseline deltas
+
+If you want to compare the selected configuration with a baseline, add delta fields to each exit's result. A delta is calculated as the selected configuration's value minus the corresponding baseline value. For example:
+
+```json
+{
+    "exit4": {
+      "time_s": 1.270,
+      "mean_IoU": 0.564,
+      "pixel_acc": 0.972,
+      "mean_acc": 0.605,
+      "sparsity": 0.652,
+      "delta_mean_IoU": -0.159,
+      "delta_mean_acc": -0.166,
+      "delta_pixel_acc": -0.013,
+      "delta_sparsity": null,
+      "delta_time_s": -0.334
+    }
+}
+```
+
+All delta fields are optional. Missing or `null` values are treated as `0` by the application. The analysis view currently displays deltas for mIoU, pixel accuracy, and runtime; `delta_mean_acc` and `delta_sparsity` are accepted but are not currently displayed.
+
 ### Dataset images
 
 The real images and ground-truth images are read from the original Cityscapes dataset specified by `NUXT_DATASET_PATH`; they are not copied into each results directory. For an image ID such as `frankfurt_000000_000576`, the application expects:

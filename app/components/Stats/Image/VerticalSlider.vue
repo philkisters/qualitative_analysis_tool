@@ -4,6 +4,7 @@
       v-if="resultStore.loaded"
       class="text-center"
     >
+      <UIcon v-if="delta" name="lucide-triangle" />
       {{ title }}
     </div>
     <USkeleton
@@ -23,5 +24,5 @@ import { useResultStore, type MetricValues } from '~/composables/stores/ResultsS
 
 const resultStore = useResultStore()
 
-const { title, metric, current } = defineProps<{ title: string, metric: MetricValues, current: number }>()
+const { title, metric, current, delta = false } = defineProps<{ title: string, metric: MetricValues, current: number, delta?: boolean }>()
 </script>

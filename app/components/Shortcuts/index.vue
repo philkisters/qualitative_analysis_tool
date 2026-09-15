@@ -12,12 +12,6 @@
     <div class="flex w-full h-full items-center justify-center gap-4">
       <div class="flex-1 flex flex-col gap-2">
         <div class="font-bold text-xl text-center">
-          Exit 2
-        </div>
-        <ShortcutsButtons exit="exit2" @navigate="emit('navigate', $event)"/>
-      </div>
-      <div class="flex-1 flex flex-col gap-2">
-        <div class="font-bold text-xl text-center">
           Exit 3
         </div>
         <ShortcutsButtons exit="exit3" @navigate="emit('navigate', $event)"/>
